@@ -10,6 +10,8 @@ mysql_hardening_hardening_conf: '/etc/mysql/conf.d/hardening.cnf'
 mysql_root_password: '-----====>SetR00tPa$$wordH3r3!!!<====-----'
 # There .my.cnf with mysql root credentials will be installed 
 mysql_user_home: "{{ ansible_env.HOME}}"
+mysql_root_group: 'root'
+mysql_hardening_mysql_conf_mode: '0600'
 
 # ensure the following parameters are set properly
 mysql_remove_remote_root: true

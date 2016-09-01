@@ -1,13 +1,17 @@
 ---
 
 - name: protect my.cnf
-  file: path='{{mysql_hardening_mysql_conf}}' mode=0600 owner=root group=root
+  file: path='{{mysql_hardening_mysql_conf}}' mode={{mysql_hardening_mysql_conf_mode}} owner=root group='{{mysql_root_group}}'
 
 - name: ensure permissions on mysql-datadir are correct
   file: path='{{mysql_datadir}}' state=directory owner='{{mysql_hardening_user}}' group='{{mysql_hardening_user}}'
 
 - name: check mysql configuration-directory exists and has right permissions
   file: path='/etc/mysql/conf.d' state=directory owner='{{mysql_hardening_user}}' group='{{mysql_hardening_group}}' mode=0470
+
+- name: on freebsd, need different permissions on the parent dir /etc/mysql too
+  file: path='/etc/mysql' state=directory mode=u+x
+  when: ansible_os_family=='FreeBSD'
 
 - name: check include-dir directive is present in my.cnf
   lineinfile: dest='{{mysql_hardening_mysql_conf}}' line='!includedir /etc/mysql/conf.d/' insertafter='EOF' state=present backup=yes
